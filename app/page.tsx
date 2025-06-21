@@ -22,17 +22,27 @@ interface CartProps {
 }
 
 const menuItems: MenuItem[] = [
-  // Code Generation Tools
+  // Dev Tools Tools
   {
     id: "1",
-    name: "Superflex",
+    name: "Windsurf",
     description:
-      "AI-powered VSCode extension that converts Figma designs, images, and text prompts into production-ready front-end code. Understands your coding style and integrates with existing UI components.",
-    price: 19,
-    category: "Code Generation",
+      "Windsurf Editor is a modern, AI-powered integrated development environment (IDE) designed to streamline and enhance the coding process for developers of all experience levels. It is available on Windows, Mac, and Linux, and offers a range of advanced features that distinguish it from traditional code editors",
+    price: 15,
+    category: "Dev Tools",
     emoji: "🚀",
     image:
-      "https://framerusercontent.com/images/0CIFYVWbNVUH1L5oOWaqFzB7Nk.svg",
+      "https://exafunction.github.io/public/brand/windsurf-black-symbol.svg",
+  },
+  {
+    id: "12",
+    name: "Basic.tech",
+    description:
+      "Basic is a purpose-built backend for personalization of apps and agents. We have a federated model instead of a traditional database, where we spin up a dedicated “datastore per user” in the cloud so each of your users is solely given their own db.",
+    price: 0,
+    category: "Dev Tools",
+    emoji: "🚀",
+    image: "https://basic.tech/_next/image?url=%2Flogo_dark.webp&w=64&q=75",
   },
   {
     id: "5",
@@ -42,7 +52,7 @@ const menuItems: MenuItem[] = [
     price: 20,
     image:
       "https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/cursor.png",
-    category: "Code Generation",
+    category: "Dev Tools",
     emoji: "🖥️",
   },
   {
@@ -51,7 +61,7 @@ const menuItems: MenuItem[] = [
     description:
       "AI-powered code completion tool providing context-aware suggestions across multiple languages. Best for general coding with broad language support.",
     price: 20,
-    category: "Code Generation",
+    category: "Dev Tools",
     emoji: "🤖",
     image: "https://miro.medium.com/v2/resize:fit:700/0*oRRpMJ9XqkRnYLhW.png",
   },
@@ -61,7 +71,7 @@ const menuItems: MenuItem[] = [
     description:
       "Cloud-based AI coding assistant with support for 50+ languages and instant deployment capabilities.",
     price: 15,
-    category: "Code Generation",
+    category: "Dev Tools",
     emoji: "🌐",
     image:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/New_Replit_Logo.svg/1200px-New_Replit_Logo.svg.png",
@@ -73,7 +83,7 @@ const menuItems: MenuItem[] = [
     description:
       "AI-driven autocomplete tool offering context-aware code suggestions with emphasis on security and VPC hosting options.",
     price: 15,
-    category: "Code Generation",
+    category: "Dev Tools",
     emoji: "⚡",
     image:
       "https://tabnine.gallerycdn.vsassets.io/extensions/tabnine/tabnine-vscode/3.232.0/1739096781018/Microsoft.VisualStudio.Services.Icons.Default",
@@ -84,7 +94,7 @@ const menuItems: MenuItem[] = [
     description:
       "Advanced AI coding agent capable of autonomously handling complex engineering tasks, debugging, and deploying applications.",
     price: 200,
-    category: "Code Generation",
+    category: "Dev Tools",
     emoji: "🧠",
     image: "https://app.devin.ai/devin_v4.png",
   },
@@ -214,7 +224,7 @@ const App: React.FC = () => {
   ];
 
   const total = cartItems.reduce(
-    (sum, item) => sum + (item.price * (item.quantity || 1)),
+    (sum, item) => sum + item.price * (item.quantity || 1),
     0
   );
 
@@ -278,7 +288,7 @@ const App: React.FC = () => {
             <div className="relative w-full h-full">
               <div className="absolute inset-0 w-full h-full flex justify-center items-center">
                 <TavusClient
-                  replicaId="r92debe21318"
+                  replicaId="rca8a38779a8"
                   personaId="p1458b007004"
                   agentId="36f51890-f91e-40e5-befb-47562737e8b9"
                   onStart={() => console.log("SimliVapi started")}
@@ -290,6 +300,7 @@ const App: React.FC = () => {
                   }}
                   menuItems={menuItems}
                   currentCart={cartItems}
+                  setCurrentCart={setCartItems}
                   onCartUpdate={(updates) => {
                     console.log("Voice agent cart updates:", updates);
                     setCartItems(updates);
@@ -322,12 +333,19 @@ const App: React.FC = () => {
 
             <div className="mt-4 px-4 h-[60px]">
               {cartItems.length > 0 ? (
-                <button
+                <label
+                  className="inline-block w-full py-3 px-4 bg-white text-black rounded-lg hover:bg-gray-800 hover:text-white transition-colors duration-200 font-semibold text-center border-2 border-dashed border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                   onClick={handleCheckout}
-                  className="w-full py-3 px-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-semibold shadow-lg"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleCheckout();
+                    }
+                  }}
                 >
-                  Checkout (${total.toFixed(2)})
-                </button>
+                  Total Amount: (${total.toFixed(2)})
+                </label>
               ) : (
                 <div className="w-full"></div>
               )}

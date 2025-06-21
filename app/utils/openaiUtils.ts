@@ -73,17 +73,17 @@ Guidelines for processing orders:
 
 Only return the JSON array, no other text.
 Examples:
-User: "Add 2 Superflex licenses"
+User: "Add 2 Windsurf licenses"
 [
-  {"action": "add", "itemName": "Superflex", "quantity": 2}
+  {"action": "add", "itemName": "Windsurf", "quantity": 2}
 ]
 
 User: "I want to place my order now"
 
-Assistant: "Superflex is a great option, it can convert designs to code and wo"
+Assistant: "Windsurf is a great option, it can convert designs to code and wo"
 User: "I want that."
 [
-  {"action": "add", "itemName": "Superflex", "quantity": 1}
+  {"action": "add", "itemName": "Windsurf", "quantity": 1}
 ]
 [
   {"action": "checkout"}

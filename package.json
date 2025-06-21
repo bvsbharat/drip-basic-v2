@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@daily-co/daily-js": "^0.80.0",
+    "@basictech/react": "^0.6.0",
     "@deepgram/sdk": "^3.5.1",
     "@headlessui/react": "^2.2.0",
     "@openai/realtime-api-beta": "github:openai/openai-realtime-api-beta",

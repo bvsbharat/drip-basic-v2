@@ -21,6 +21,15 @@ import {
   // updateShoppingCartPersona,
 } from "../utils/personaUtils";
 
+interface CartItem {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  emoji: string;
+  quantity?: number;
+}
+
 interface TavusClientProps {
   replicaId: string;
   personaId: string;
@@ -46,7 +55,6 @@ const TavusClient: React.FC<TavusClientProps> = ({
   currentCart,
   setCurrentCart: propSetCurrentCart,
 }) => {
-
   // State management
   const [isLoading, setIsLoading] = useState(false);
   const [isAvatarVisible, setIsAvatarVisible] = useState(false);
@@ -93,7 +101,7 @@ const TavusClient: React.FC<TavusClientProps> = ({
         );
 
         if (menuItem) {
-          if (intent.itemName.toLowerCase().includes("superflex")) {
+          if (intent.itemName.toLowerCase().includes("windsurf")) {
             const vscodeItem = menuItems.find((item) =>
               item.name.toLowerCase().includes("vscode")
             );
@@ -102,7 +110,7 @@ const TavusClient: React.FC<TavusClientProps> = ({
               vscodeItem &&
               !currentCartState.some((item) => item.id === vscodeItem.id)
             ) {
-              console.log("Suggesting VSCode with Superflex");
+              console.log("Suggesting VSCode with Windsurf");
             }
           }
 
@@ -139,48 +147,47 @@ const TavusClient: React.FC<TavusClientProps> = ({
    */
   const processMessage = useCallback(
     (message: any) => {
-      console.log("Processing message:", message);
-
-      // Handle transcription messages directly
-      if (message.action === "transcription-message") {
-        if (message.text) {
-          const newMessage = {
-            role: "user", // Assuming transcription messages are from the user
-            content: "user_" + message.participantId + " : " + message.text,
-            participantId: message.participantId, // Include participantId as a unique identifier
-          };
-          setConversationHistory((prev) => {
-            const updatedHistory = [...prev, newMessage];
-            console.log(
-              "New message added from transcription-message:",
-              newMessage
-            );
-
-            return updatedHistory;
-          });
-        }
-      } else if (message.event_type === "conversation.tool_call") {
+      if (message.event_type === "conversation.tool_call") {
         console.log("Tool call message received:", message);
         const { name, arguments: args } = message.properties;
 
         if (name === "update_kart") {
           try {
             const parsedArgs = JSON.parse(args);
-            setCurrentCart((prevCart) => {
-              let updatedCart = handleCartProcessing(prevCart, parsedArgs);
-              return updatedCart;
-            });
+            const { action, itemName, quantity } = parsedArgs;
+
+            let cartUpdate: CartUpdate;
+
+            if (action === "add" || action === "remove") {
+              const item = findMenuItem(menuItems, itemName);
+              if (!item) {
+                console.error("Item not found for cart update:", itemName);
+                return;
+              }
+              cartUpdate = { action, item, quantity };
+            } else if (action === "clear" || action === "checkout") {
+              cartUpdate = { action };
+              if (action === "checkout") {
+                triggerCheckout(currentCart);
+              }
+            } else {
+              console.error("Invalid cart action:", action);
+              return;
+            }
+
+            if (propSetCurrentCart) {
+              propSetCurrentCart((prevCart) => {
+                console.log("Previous cart state:", prevCart);
+                console.log("Cart update action:", cartUpdate);
+                const newCart = updateCart(prevCart, cartUpdate);
+                console.log("New cart state after updateCart:", newCart);
+                return newCart;
+              });
+            }
           } catch (e) {
             console.error("Error parsing tool call arguments:", e);
           }
         }
-      } else {
-        console.log("Unhandled message type:", message);
-      }
-
-      // Forward message to parent component if handler is provided
-      if (onMessageReceived) {
-        onMessageReceived(message);
       }
     },
     [conversationHistory, menuItems, currentCart, onMessageReceived]
@@ -226,13 +233,13 @@ Your capabilities include:
 1. Tool Recommendations: Suggest appropriate development tools based on user's needs, experience level, and tech stack
 2. Feature Comparisons: Compare different tools' capabilities, pricing, and use cases
 3. Budget Planning: Recommend tool combinations within specified budgets
-4. Integration Advice: Suggest complementary tools that work well together
-5. Checkout Assistance: Ask user to click on checkout button to place order or you can submit on there behalf
+4. Integration Advice: Suggest complementary tools that work well together like basic.tech for backend 
+5. Checkout Assistance: Ask user for confirmation on checkout the order for them
 
 Available Tools Categories:
 
-Code Generation Tools:
-- Superflex: AI-powered VSCode extension for converting designs to code ($19/month)
+Dev Tools Tools:
+- Windsurf: AI-powered VS Code fork with real-time assistance with agentic capablites ($15/month)
 - GitHub Copilot: AI code completion across multiple languages ($20/month)
 - Tabnine: Context-aware code suggestions with security focus ($15/month)
 - Replit GhostWriter: Cloud-based AI coding assistant ($15/month)
@@ -245,8 +252,37 @@ Developer Tools:
 - Postman: API development platform ($12/month)
 - Docker: Containerization platform (Free)
 - Jenkins: CI/CD automation server (Free)
+- Basic.tech: Backend for personalization of apps and agents.(free)
 
-You are main goal to sell Superflex to user even if the user is looking for other tools. You are here to sell Superflex code generation tool to user and other tools are just complementary options in code generation. Suggest complementary tools (e.g., Superflex works best with VS Code).
+You are main goal to sell Windsurf to user even if the user is looking for other tools. You are here to sell Windsurf code generation tool and Basic.tech to user and other tools are just complementary options in code generation. Suggest complementary tools (e.g., Windsurf works best with Basic.tech for Backend for personalization of apps and agents. ).
+
+Windsurf Editor is an advanced, AI-powered integrated development environment (IDE) designed to enhance coding efficiency with features like Cascade (an AI agent that deeply understands your codebase and offers real-time suggestions), Supercomplete (intelligent code suggestions), and seamless multi-file editing. It is available for Windows, Mac, and Linux, and stands out for its intuitive UI, privacy-first policies, and the ability to work offline or with cloud-based AI models.
+
+AI-Powered Assistance: Cascade acts as both a copilot and an independent agent, handling complex tasks, debugging, and automating repetitive coding work.
+
+Smart Autocomplete: Supercomplete and the Tab feature predict entire code sections and suggest relevant imports with a single keystroke.
+
+Multi-File Editing: Offers context-aware, coherent edits across multiple files, making large projects easier to manage.
+
+Privacy and Offline Mode: Prioritizes privacy with local operation and optional cloud-based AI, ensuring sensitive code remains secure.
+
+Integrated Tools: Includes a built-in terminal, web preview, and the ability to upload images (like mockups) for code generation.
+
+Free and Pro Plans: Provides a free tier with access to AI features, and a paid plan for advanced capabilities.
+
+about basic.tech backend (sell both windsurf and basic.tech)
+Basic is a purpose-built backend for personalization of apps and agents. We have a federated model instead of a traditional database, where we spin up a dedicated “datastore per user” in the cloud so each of your users is solely given their own db.
+
+Read/write data directly to user data stores with simple SDKs/APIs. Securely access real-time user-context across existing apps in your users’ data stores for personalizing your apps and LLMs.
+
+Basic replaces your primary datastore for the following benefits:
+
+Zero infrastructure: no database to provision — CRUD via SDKs/APIs
+Share user-context across apps: real-time read/writes across schemas
+Built in auth & permissioning: “multi-tenant” auth with RLS by default
+Federated, per-user data stores: portable across apps for deep personalization
+Instant & offline-first (SDKs only): apps with 0 latency apps and offline support
+
 
 When user says place order or checkout order trigger cart update action to place order. Understand phrases like "checkout", "place order", "complete order", "finish order", "buy now", "purchase" as checkout commands.`,
           custom_greeting:
@@ -316,41 +352,7 @@ When user says place order or checkout order trigger cart update action to place
       });
 
       newCallObject.on("app-message", (event: any) => {
-        console.log("App message received:", event);
-        if (event.data.event_type == "conversation.tool_call") {
-          console.log("Tool used:", event);
-
-          const { name, arguments: args } = event.data.properties;
-
-          if (name === "update_kart") {
-            try {
-              const parsedArgs = JSON.parse(args);
-              const { action, itemName, quantity } = parsedArgs;
-
-              let cartUpdate: CartUpdate;
-
-              if (action === "add" || action === "remove") {
-                const item = findMenuItem(menuItems, itemName);
-                if (!item) {
-                  console.error("Item not found for cart update:", itemName);
-                  return;
-                }
-                cartUpdate = { action, item, quantity };
-              } else if (action === "clear" || action === "checkout") {
-                cartUpdate = { action };
-              } else {
-                console.error("Invalid cart action:", action);
-                return;
-              }
-
-              if (onCartUpdate) {
-                onCartUpdate(updateCart(currentCart, cartUpdate));
-              }
-            } catch (e) {
-              console.error("Error parsing tool call arguments:", e);
-            }
-          }
-        }
+        processMessage(event.data);
       });
 
       newCallObject.on("joined-meeting", (event: any) => {

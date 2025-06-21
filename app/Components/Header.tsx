@@ -18,26 +18,15 @@ const Header: React.FC<HeaderProps> = ({ cartItems }) => {
     <header className="sticky top-0 z-50 py-4 px-8">
       <div className="flex justify-between items-center backdrop-blur-md p-3 border border-white/20 rounded-2xl">
         <h1
-          className="text-3xl font-bold text-white tracking-tight font-space-grotesk "
+          className="text-3xl font-bold tracking-tight"
           style={{
             fontFamily: "Space Grotesk, sans-serif",
           }}
         >
-          <span className="bg-gradient-to-r from-white to-purple-300 bg-clip-text ">
-            <span className="flex items-center gap-1">
-              {/* <img
-                src={logo}
-                alt="DevKit.AI Logo"
-                className="h-8 w-auto mr-2"
-              /> */}
-              <span className="text-purple-400 mr-2">
-                <FaRocket /> {""}
-              </span>
+          <span className="flex items-center gap-2">
+            <span className="bg-gradient-to-r from-black via-purple-500 to-pink-100 p-2 text-white">
+              <FaRocket className="inline-block mr-2" />
               DevKit.AI
-              {/* <span className="text-white text-lg">
-                - AI Shopping Assistant
-              </span> */}
-              <span role="img" aria-label="smiling face"></span>
             </span>
           </span>
         </h1>

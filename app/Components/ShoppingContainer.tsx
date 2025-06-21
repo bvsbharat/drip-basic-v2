@@ -131,47 +131,15 @@ const ShoppingContainer: React.FC<ShoppingContainerProps> = ({
                             {cartItems.some(
                               (cartItem) => cartItem.id === item.id
                             ) ? (
-                              <div className="flex items-center gap-1 bg-black/5 p-1 rounded-full">
-                                <button
-                                  onClick={() =>
-                                    updateQuantity(
-                                      item.id,
-                                      (cartItems.find(
-                                        (cartItem) => cartItem.id === item.id
-                                      )?.quantity || 1) - 1
-                                    )
-                                  }
-                                  className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                >
-                                  -
-                                </button>
-                                <span className="w-7 text-center font-medium">
+                              <div className="bg-black/10 px-3 py-1 rounded-full">
+                                <span className="text-sm font-medium text-black">
+                                  Qty:{" "}
                                   {cartItems.find(
                                     (cartItem) => cartItem.id === item.id
                                   )?.quantity || 0}
                                 </span>
-                                <button
-                                  onClick={() =>
-                                    updateQuantity(
-                                      item.id,
-                                      (cartItems.find(
-                                        (cartItem) => cartItem.id === item.id
-                                      )?.quantity || 1) + 1
-                                    )
-                                  }
-                                  className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                >
-                                  +
-                                </button>
                               </div>
-                            ) : (
-                              <button
-                                onClick={() => addToCart(item)}
-                                className="bg-black text-white px-4 py-1.5 rounded-full text-sm hover:bg-gray-800 transition-colors"
-                              >
-                                Add
-                              </button>
-                            )}
+                            ) : null}
                           </div>
                         </div>
                       ))}
@@ -218,25 +186,9 @@ const ShoppingContainer: React.FC<ShoppingContainerProps> = ({
                         </div>
                         <div className="flex items-center gap-3 ml-3">
                           <div className="flex items-center gap-1 bg-black/5 p-1 rounded-full">
-                            <button
-                              onClick={() =>
-                                updateQuantity(item.id, item.quantity - 1)
-                              }
-                              className="bg-white text-black w-6 h-6 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-                            >
-                              -
-                            </button>
                             <span className="w-6 text-center font-medium">
                               {item.quantity}
                             </span>
-                            <button
-                              onClick={() =>
-                                updateQuantity(item.id, item.quantity + 1)
-                              }
-                              className="bg-white text-black w-6 h-6 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-                            >
-                              +
-                            </button>
                           </div>
                           <button
                             onClick={() =>
@@ -271,21 +223,19 @@ const ShoppingContainer: React.FC<ShoppingContainerProps> = ({
 
             {/* Checkout Section - Fixed at bottom */}
             {cartItems.length > 0 && (
-              <div className="border-t border-white/20 bg-white/5 backdrop-blur-sm mt-auto">
+              <div className="border-t border-white/20 bg-black/5 backdrop-blur-sm mt-auto">
                 <div className="p-4">
                   <div className="flex justify-between items-center mb-3">
-                    <span className="text-base font-medium">Total</span>
-                    <span className="text-lg font-bold">
+                    <span className="text-base font-medium text-black">
+                      Total
+                    </span>
+                    <span className="text-lg font-bold text-black">
                       ${cartTotal.toFixed(2)}
                     </span>
                   </div>
-                  <button
-                    onClick={handleCheckout}
-                    data-testid="checkout-button"
-                    className="w-full bg-black text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors"
-                  >
-                    Checkout (${cartTotal.toFixed(2)})
-                  </button>
+                  <div className="w-full bg-gray-100 text-black py-2.5 rounded-lg font-medium text-center">
+                    Total: ${cartTotal.toFixed(2)}
+                  </div>
                 </div>
               </div>
             )}

@@ -1,4 +1,4 @@
-# DevKit.AI - Interactive Shopping Assistant @ built with SuperFlex.AI
+# DevKit.AI - Interactive Shopping Assistant @ built with Windsurf.AI
 
 DevKit.AI is an intelligent shopping assistant powered by Simli's AI and OpenAI's Real-time API.
 It offers a seamless shopping experience with the help of **DevKit Assistant**, a friendly AI companion that guides users through their shopping journey. Whether you're searching for the best **developer tools** for your projects or need real-time assistance, DevKit.AI has you covered.

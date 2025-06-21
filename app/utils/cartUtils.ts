@@ -122,7 +122,7 @@ export function updateCart(
       );
       
     case 'clear':
-      return [];
+      return currentCart;
 
     case 'checkout':
       // Trigger checkout event and return current cart
@@ -133,7 +133,7 @@ export function updateCart(
         }
       });
       window.dispatchEvent(event);
-      return [];
+      return currentCart;
       
     default:
       return currentCart;
